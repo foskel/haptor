@@ -12,7 +12,7 @@ public final class ImmutableDependencyRegistryDecorator<S, I, D> extends Abstrac
     }
 
     @Override
-    public boolean register(Object source, DependencyScanningStrategy scanningStrategy) {
+    public boolean register(S source, DependencyScanningStrategy<I, D> scanningStrategy) {
         throw new UnsupportedOperationException();
     }
 

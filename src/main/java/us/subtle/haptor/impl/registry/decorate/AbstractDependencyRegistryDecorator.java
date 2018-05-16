@@ -13,7 +13,7 @@ public abstract class AbstractDependencyRegistryDecorator<S, I, D> implements De
     }
 
     @Override
-    public boolean register(S source, DependencyScanningStrategy scanningStrategy) {
+    public boolean register(S source, DependencyScanningStrategy<I, D> scanningStrategy) {
         return this.backingRegistry.register(source, scanningStrategy);
     }
 

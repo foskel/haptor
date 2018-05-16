@@ -1,12 +1,13 @@
 package us.subtle.haptor.impl.registry;
 
 import us.subtle.haptor.registry.DependencyRegistry;
+import us.subtle.haptor.scan.DependencyScanResult;
 import us.subtle.haptor.scan.DependencyScanningStrategy;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Fred on 5/28/2017.
@@ -17,30 +18,27 @@ public final class ClassDependencyRegistry<D> implements DependencyRegistry<Obje
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean register(Object source, DependencyScanningStrategy scanningStrategy) {
-        Map<Object, Object> foundDependencies = scanningStrategy.scan(source);
+    public boolean register(Object source, DependencyScanningStrategy<Class<? extends D>, D> scanningStrategy) {
+        List<DependencyScanResult<Class<? extends D>, D>> foundDependencies = scanningStrategy.scan(source);
 
         if (foundDependencies.isEmpty()) {
             return false;
         }
 
-        Set<Class<? extends D>> foundDependencyIdentifiers = (Set<Class<? extends D>>) (Set<?>) foundDependencies.keySet();
-        Set<Class<? extends D>> dependencyIdentifiers = this.dependencies.keySet();
-
-        if (dependencyIdentifiers.containsAll(foundDependencyIdentifiers)) {
-            return false;
-        }
-
-        this.registerAllDependencies(source, (Map<Class<? extends D>, D>) (Map<?, ?>) foundDependencies);
+        this.registerAllDependencies(source, foundDependencies);
 
         return true;
     }
 
     @SuppressWarnings("unchecked")
-    private void registerAllDependencies(Object source, Map<Class<? extends D>, D> dependencies) {
-        this.dependencies.putAll(dependencies);
+    private void registerAllDependencies(Object source, List<DependencyScanResult<Class<? extends D>, D>> scanResults) {
+        scanResults.forEach(scanResult -> {
+            Class<? extends D> identifier = scanResult.getDependencyIdentifier();
+            D dependency = scanResult.getDependency();
 
-        dependencies.forEach((identifier, dependency) -> this.dependencyHolders.put(source, identifier));
+            this.dependencies.put(identifier, dependency);
+            this.dependencyHolders.put(source, identifier);
+        });
     }
 
     @Override
@@ -56,10 +54,6 @@ public final class ClassDependencyRegistry<D> implements DependencyRegistry<Obje
         Class<? extends D> identifier = this.dependencyHolders.get(source);
 
         return this.dependencies.remove(identifier) != null;
-    }
-
-    private void unregisterAllDependencies(Map<Class<? extends D>, D> dependencies) {
-        this.dependencies.keySet().removeAll(dependencies.keySet());
     }
 
     @Override

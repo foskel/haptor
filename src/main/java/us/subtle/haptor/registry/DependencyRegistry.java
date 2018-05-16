@@ -8,7 +8,7 @@ import java.util.Map;
  * Created by Fred on 5/28/2017.
  */
 public interface DependencyRegistry<S, I, D> {
-    boolean register(S source, DependencyScanningStrategy scanningStrategy);
+    boolean register(S source, DependencyScanningStrategy<I, D> scanningStrategy);
 
     boolean registerDirectly(I identifier, D dependency);
 

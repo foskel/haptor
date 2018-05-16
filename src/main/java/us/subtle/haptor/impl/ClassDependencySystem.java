@@ -3,7 +3,9 @@ package us.subtle.haptor.impl;
 import us.subtle.haptor.DependencySystem;
 import us.subtle.haptor.impl.registry.ClassDependencyRegistry;
 import us.subtle.haptor.impl.registry.decorate.ImmutableDependencyRegistryDecorator;
+import us.subtle.haptor.impl.satisfy.StandardDependencySatisfyingStrategy;
 import us.subtle.haptor.impl.scan.AnnotationDependencyScanningStrategy;
+import us.subtle.haptor.impl.validate.NullCheckingDependencyValidatorService;
 import us.subtle.haptor.process.DependencySatisfyingProcessor;
 import us.subtle.haptor.registry.DependencyRegistry;
 import us.subtle.haptor.satisfy.DependencySatisfyingResult;
@@ -16,6 +18,10 @@ public final class ClassDependencySystem<D> implements DependencySystem<Object, 
     private final Set<DependencySatisfyingProcessor> satisfyingProcessors;
     private final DependencySatisfyingStrategy satisfyingStrategy;
 
+    public ClassDependencySystem() {
+        this(new StandardDependencySatisfyingStrategy(NullCheckingDependencyValidatorService.INSTANCE));
+    }
+
     public ClassDependencySystem(DependencySatisfyingStrategy satisfyingStrategy) {
         this.registry = new ClassDependencyRegistry<>();
         this.satisfyingProcessors = new HashSet<>();
@@ -23,6 +29,7 @@ public final class ClassDependencySystem<D> implements DependencySystem<Object, 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean registerDependencies(Object source) {
         return this.registry.register(source, AnnotationDependencyScanningStrategy.INSTANCE);
     }

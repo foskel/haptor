@@ -3,7 +3,7 @@ package us.subtle.haptor.exceptions;
 /**
  * Created by Fred on 5/28/2017.
  */
-public final class UnsatisfiedDependencyException extends DependencyValidatingException {
+public final class UnsatisfiedDependencyException extends Exception {
     public UnsatisfiedDependencyException(String message) {
         super(message);
     }

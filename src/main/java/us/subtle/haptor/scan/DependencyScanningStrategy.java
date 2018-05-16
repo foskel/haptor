@@ -1,7 +1,7 @@
 package us.subtle.haptor.scan;
 
-import java.util.Map;
+import java.util.List;
 
-public interface DependencyScanningStrategy {
-    Map<Object, Object> scan(Object source);
+public interface DependencyScanningStrategy<I, D> {
+    List<DependencyScanResult<I, D>> scan(Object source);
 }
