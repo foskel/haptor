@@ -1,13 +1,9 @@
 package com.github.foskel.haptor.impl.registry;
 
-import com.github.foskel.haptor.scan.DependencyScanResult;
 import com.github.foskel.haptor.scan.DependencyScanningStrategy;
 import com.github.foskel.haptor.registry.DependencyRegistry;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Fred on 5/28/2017.
@@ -18,8 +14,8 @@ public final class ClassDependencyRegistry<D> implements DependencyRegistry<Obje
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean register(Object source, DependencyScanningStrategy<Class<? extends D>, D> scanningStrategy) {
-        List<DependencyScanResult<Class<? extends D>, D>> foundDependencies = scanningStrategy.scan(source);
+    public boolean register(Object source, DependencyScanningStrategy<Class<? extends D>> scanningStrategy) {
+        Collection<Class<? extends D>> foundDependencies = scanningStrategy.scan(source);
 
         if (foundDependencies.isEmpty()) {
             return false;
@@ -31,12 +27,9 @@ public final class ClassDependencyRegistry<D> implements DependencyRegistry<Obje
     }
 
     @SuppressWarnings("unchecked")
-    private void registerAllDependencies(Object source, List<DependencyScanResult<Class<? extends D>, D>> scanResults) {
-        scanResults.forEach(scanResult -> {
-            Class<? extends D> identifier = scanResult.getDependencyIdentifier();
-            D dependency = scanResult.getDependency();
-
-            this.dependencies.put(identifier, dependency);
+    private void registerAllDependencies(Object source, Collection<Class<? extends D>> scanResults) {
+        scanResults.forEach(identifier -> {
+            this.dependencies.put(identifier, null);//The dependency is not satisfied yet, so it's null.
             this.dependencyHolders.put(source, identifier);
         });
     }

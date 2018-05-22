@@ -1,7 +1,8 @@
 package com.github.foskel.haptor.scan;
 
-import java.util.List;
+import java.util.Collection;
 
-public interface DependencyScanningStrategy<I, D> {
-    List<DependencyScanResult<I, D>> scan(Object source);
+@FunctionalInterface
+public interface DependencyScanningStrategy<T> {
+    Collection<T> scan(Object source);
 }
