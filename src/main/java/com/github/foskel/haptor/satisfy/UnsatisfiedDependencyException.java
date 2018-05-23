@@ -1,4 +1,4 @@
-package com.github.foskel.haptor.exceptions;
+package com.github.foskel.haptor.satisfy;
 
 /**
  * Created by Fred on 5/28/2017.

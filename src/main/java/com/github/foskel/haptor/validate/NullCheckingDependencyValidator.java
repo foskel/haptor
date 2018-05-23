@@ -1,4 +1,4 @@
-package com.github.foskel.haptor.impl.validate;
+package com.github.foskel.haptor.validate;
 
 import com.github.foskel.haptor.validate.DependencyValidatorService;
 
@@ -7,7 +7,7 @@ import java.util.Collection;
 /**
  * Created by F on 7/17/2017.
  */
-public enum NullCheckingDependencyValidatorService implements DependencyValidatorService {
+public enum NullCheckingDependencyValidator implements DependencyValidatorService {
     INSTANCE;
 
     @Override

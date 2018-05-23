@@ -1,4 +1,4 @@
-package com.github.foskel.haptor.impl.scan;
+package com.github.foskel.haptor.scan;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,13 +1,12 @@
-package com.github.foskel.haptor.impl.process;
+package com.github.foskel.haptor.process;
 
-import com.github.foskel.haptor.process.DependencySatisfyingProcessor;
-import com.github.foskel.haptor.exceptions.UnsatisfiedDependencyException;
+import com.github.foskel.haptor.satisfy.UnsatisfiedDependencyException;
 import com.github.foskel.haptor.satisfy.DependencySatisfyingResult;
 
-public final class FailedDependencySatisfyingProcessor implements DependencySatisfyingProcessor {
+public final class ExceptionThrowingDependencyProcessor implements DependencyProcessor {
     private final String exceptionMessage;
 
-    public FailedDependencySatisfyingProcessor(String exceptionMessage) {
+    public ExceptionThrowingDependencyProcessor(String exceptionMessage) {
         this.exceptionMessage = exceptionMessage;
     }
 

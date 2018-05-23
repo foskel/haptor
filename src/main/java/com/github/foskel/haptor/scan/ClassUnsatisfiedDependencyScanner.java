@@ -1,12 +1,10 @@
-package com.github.foskel.haptor.impl.scan;
-
-import com.github.foskel.haptor.scan.DependencyScanningStrategy;
+package com.github.foskel.haptor.scan;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-public enum AnnotationDependencyScanningStrategy implements DependencyScanningStrategy {
+public enum ClassUnsatisfiedDependencyScanner implements UnsatisfiedDependencyScanner {
     INSTANCE;
 
     @Override
