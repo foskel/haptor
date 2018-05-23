@@ -55,7 +55,7 @@ public final class StandardDependencySystem<S, I, D> implements DependencySystem
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<DependencySatisfyingResult> satisfy(Map<I, D> dependencies) {
+    public List<DependencySatisfyingResult<I, D>> satisfy(Map<I, D> dependencies) {
         return this.satisfyingStrategy.satisfy(this.registry,
                 this.satisfyingProcessors,
                 dependencies);

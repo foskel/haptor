@@ -18,7 +18,7 @@ public interface DependencySystem<S, I, D> {
 
     <T extends D> T find(I identifier);
 
-    List<DependencySatisfyingResult> satisfy(Map<I, D> dependencies);
+    List<DependencySatisfyingResult<I, D>> satisfy(Map<I, D> dependencies);
 
     DependencyRegistry<I, D> getRegistry();
 }
