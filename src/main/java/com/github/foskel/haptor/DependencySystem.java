@@ -7,16 +7,16 @@ import com.github.foskel.haptor.satisfy.DependencySatisfyingResult;
 import java.util.List;
 import java.util.Map;
 
-public interface DependencySystem<I, D> {
-    boolean register(Object source);
+public interface DependencySystem<S, I, D> {
+    boolean register(S source);
 
-    boolean unregister(Object source);
+    boolean unregister(S source);
 
     boolean registerProcessor(DependencyProcessor processor);
 
     boolean unregisterProcessor(DependencyProcessor processor);
 
-    <T extends D> T find(I identifier);;
+    <T extends D> T find(I identifier);
 
     List<DependencySatisfyingResult> satisfy(Map<I, D> dependencies);
 
