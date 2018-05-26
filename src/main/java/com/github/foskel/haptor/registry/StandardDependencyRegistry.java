@@ -8,13 +8,13 @@ import java.util.function.Predicate;
 /**
  * Created by Fred on 5/28/2017.
  */
-public final class ClassDependencyRegistry<D> implements DependencyRegistry<Class<? extends D>, D> {
-    private final Map<Object, Class<? extends D>> dependencyHolders = new HashMap<>();
-    private final Map<Class<? extends D>, D> dependencies = new HashMap<>();
+public final class StandardDependencyRegistry<I, D> implements DependencyRegistry<I, D> {
+    private final Map<Object, I> dependencyHolders = new HashMap<>();
+    private final Map<I, D> dependencies = new HashMap<>();
 
     @Override
-    public boolean register(Object source, UnsatisfiedDependencyScanner<Class<? extends D>> scanningStrategy) {
-        Collection<Class<? extends D>> foundDependencies = scanningStrategy.scan(source);
+    public boolean register(Object source, UnsatisfiedDependencyScanner<I> scanningStrategy) {
+        Collection<I> foundDependencies = scanningStrategy.scan(source);
 
         if (foundDependencies.isEmpty()) {
             return false;
@@ -25,7 +25,7 @@ public final class ClassDependencyRegistry<D> implements DependencyRegistry<Clas
         return true;
     }
 
-    private void registerAllDependencies(Object source, Collection<Class<? extends D>> scanResults) {
+    private void registerAllDependencies(Object source, Collection<I> scanResults) {
         scanResults.forEach(identifier -> {
             this.dependencies.put(identifier, null);//The dependency is not satisfied yet, so it's null.
             this.dependencyHolders.put(source, identifier);
@@ -33,7 +33,7 @@ public final class ClassDependencyRegistry<D> implements DependencyRegistry<Clas
     }
 
     @Override
-    public boolean registerDirectly(Class<? extends D> identifier, D value) {
+    public boolean registerDirectly(I identifier, D value) {
         this.dependencies.put(identifier, value);
 
         return true;
@@ -41,7 +41,7 @@ public final class ClassDependencyRegistry<D> implements DependencyRegistry<Clas
 
     @Override
     public boolean unregister(Object source) {
-        Class<? extends D> identifier = this.dependencyHolders.get(source);
+        I identifier = this.dependencyHolders.get(source);
 
         this.dependencies.remove(identifier);
 
@@ -49,24 +49,24 @@ public final class ClassDependencyRegistry<D> implements DependencyRegistry<Clas
     }
 
     @Override
-    public boolean unregisterDirectly(Class<? extends D> identifier) {
+    public boolean unregisterDirectly(I identifier) {
         this.dependencies.remove(identifier);
 
         return true;
     }
 
     @Override
-    public boolean unregisterIf(Predicate<Class<? extends D>> condition) {
+    public boolean unregisterIf(Predicate<I> condition) {
         return this.dependencies.keySet().removeIf(condition);
     }
 
     @Override
-    public boolean has(Class<? extends D> identifier) {
+    public boolean has(I identifier) {
         return this.dependencies.containsKey(identifier);
     }
 
     @Override
-    public Map<Class<? extends D>, D> findAllDependencies() {
+    public Map<I, D> findAllDependencies() {
         return Collections.unmodifiableMap(this.dependencies);
     }
 
