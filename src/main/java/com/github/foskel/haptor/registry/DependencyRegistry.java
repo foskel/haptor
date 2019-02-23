@@ -1,7 +1,9 @@
 package com.github.foskel.haptor.registry;
 
+import com.github.foskel.haptor.DependencyRef;
 import com.github.foskel.haptor.scan.UnsatisfiedDependencyScanner;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -21,7 +23,7 @@ public interface DependencyRegistry<I, D> {
 
     boolean has(I identifier);
 
-    Map<I, D> findAllDependencies();
+    Map<I, DependencyRef<I, D>> getAllDependencies();
 
     void clear();
 }

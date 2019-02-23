@@ -5,20 +5,18 @@ package com.github.foskel.haptor.satisfy;
  * @since 7/17/2017
  */
 public final class DependencySatisfyingResult<I, D> {
-    private final I dependencyIdentifier;
+    private final I identifier;
     private final D dependency;
     private final boolean validationResult;
 
-    public DependencySatisfyingResult(I dependencyIdentifier,
-                                      D dependency,
-                                      boolean validationResult) {
-        this.dependencyIdentifier = dependencyIdentifier;
+    public DependencySatisfyingResult(I identifier, D dependency, boolean validationResult) {
+        this.identifier = identifier;
         this.dependency = dependency;
         this.validationResult = validationResult;
     }
 
-    public I getDependencyIdentifier() {
-        return this.dependencyIdentifier;
+    public I getIdentifier() {
+        return this.identifier;
     }
 
     public D getDependency() {
@@ -31,9 +29,9 @@ public final class DependencySatisfyingResult<I, D> {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "{"
-                + this.dependencyIdentifier + ","
-                + this.dependency + ","
-                + this.validationResult + "}";
+        return "DependencySatisfyingResult{id=" +
+                this.identifier + "," + "value=" +
+                this.dependency + "," + "result=" +
+                this.validationResult + "}";
     }
 }

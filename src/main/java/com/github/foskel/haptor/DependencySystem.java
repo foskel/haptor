@@ -2,23 +2,27 @@ package com.github.foskel.haptor;
 
 import com.github.foskel.haptor.process.DependencyProcessor;
 import com.github.foskel.haptor.registry.DependencyRegistry;
-import com.github.foskel.haptor.satisfy.DependencySatisfyingResult;
+import com.github.foskel.haptor.satisfy.UnsatisfiedDependencyException;
+import com.github.foskel.haptor.scan.UnsatisfiedDependencyScanner;
 
-import java.util.List;
-import java.util.Map;
+import java.util.function.Function;
 
-public interface DependencySystem<S, I, D> {
-    boolean register(S source);
+public interface DependencySystem<I, D> {
+    boolean register(Object source, UnsatisfiedDependencyScanner<I> scanner);
 
-    boolean unregister(S source);
+    boolean unregister(Object source);
 
     boolean registerProcessor(DependencyProcessor processor);
 
     boolean unregisterProcessor(DependencyProcessor processor);
 
-    <T extends D> T find(I identifier);
-
-    List<DependencySatisfyingResult<I, D>> satisfy(Map<I, D> dependencies);
+    void satisfy(Function<I, D> depSupplier) throws UnsatisfiedDependencyException;
 
     DependencyRegistry<I, D> getRegistry();
+
+    <T extends D> T find(Object... args);
+
+    <T extends D> T find(I identifier);
+
+    void setCustomLocator(Function<Object[], ? extends D> customLocator);
 }

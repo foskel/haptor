@@ -4,8 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-public enum ClassUnsatisfiedDependencyScanner implements UnsatisfiedDependencyScanner {
-    INSTANCE;
+public final class AnnotationDependencyScanner implements UnsatisfiedDependencyScanner {
 
     @Override
     public Collection<Class<?>> scan(Object source) {

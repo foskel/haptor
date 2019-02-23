@@ -2,38 +2,32 @@ package com.github.foskel.haptor;
 
 import com.github.foskel.haptor.process.DependencyProcessor;
 import com.github.foskel.haptor.registry.DependencyRegistry;
-import com.github.foskel.haptor.satisfy.DependencySatisfyingResult;
 import com.github.foskel.haptor.satisfy.DependencySatisfyingStrategy;
+import com.github.foskel.haptor.satisfy.UnsatisfiedDependencyException;
 import com.github.foskel.haptor.scan.UnsatisfiedDependencyScanner;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 
-public final class StandardDependencySystem<S, I, D> implements DependencySystem<S, I, D> {
+public final class StandardDependencySystem<I, D> implements DependencySystem<I, D> {
     private final DependencyRegistry<I, D> registry;
     private final Set<DependencyProcessor> satisfyingProcessors;
     private final DependencySatisfyingStrategy satisfyingStrategy;
-    private final UnsatisfiedDependencyScanner<I> unsatisfiedScanner;
+    private Function<Object[], ? extends D> customLocator;
 
-    public StandardDependencySystem(DependencyRegistry<I, D> registry,
-                                    DependencySatisfyingStrategy satisfyingStrategy,
-                                    UnsatisfiedDependencyScanner<I> unsatisfiedScanner) {
+    public StandardDependencySystem(DependencyRegistry<I, D> registry, DependencySatisfyingStrategy satisfyingStrategy) {
         this.registry = registry;
-        this.unsatisfiedScanner = unsatisfiedScanner;
         this.satisfyingProcessors = new HashSet<>();
         this.satisfyingStrategy = satisfyingStrategy;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public boolean register(S source) {
-        return this.registry.register(source, this.unsatisfiedScanner);
+    public boolean register(Object source, UnsatisfiedDependencyScanner<I> scanner) {
+        return this.registry.register(source, scanner);
     }
 
     @Override
-    public boolean unregister(S source) {
+    public boolean unregister(Object source) {
         return this.registry.unregister(source);
     }
 
@@ -48,21 +42,32 @@ public final class StandardDependencySystem<S, I, D> implements DependencySystem
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T extends D> T find(I identifier) {
-        return (T) this.registry.findAllDependencies().get(identifier);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<DependencySatisfyingResult<I, D>> satisfy(Map<I, D> dependencies) {
-        return this.satisfyingStrategy.satisfy(this.registry,
-                this.satisfyingProcessors,
-                dependencies);
+    public void satisfy(Function<I, D> depSupplier) throws UnsatisfiedDependencyException {
+        this.satisfyingStrategy.satisfy(this.registry, depSupplier, this.satisfyingProcessors);
     }
 
     @Override
     public DependencyRegistry<I, D> getRegistry() {
         return this.registry;
+    }
+
+    @Override
+    public <T extends D> T find(Object... args) {
+        if (customLocator == null) {
+            return null;
+        }
+
+        return (T) customLocator.apply(args);
+    }
+
+    @Override
+    public <T extends D> T find(I identifier) {
+        //noinspection unchecked
+        return (T) this.registry.getAllDependencies().get(identifier);
+    }
+
+    @Override
+    public void setCustomLocator(Function<Object[], ? extends D> customLocator) {
+        this.customLocator = customLocator;
     }
 }
