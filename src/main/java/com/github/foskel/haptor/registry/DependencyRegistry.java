@@ -11,7 +11,7 @@ import java.util.function.Predicate;
  * Created by Fred on 5/28/2017.
  */
 public interface DependencyRegistry<I, D> {
-    boolean register(Object source, UnsatisfiedDependencyScanner<I> scanningStrategy);
+    boolean register(Object source, UnsatisfiedDependencyScanner scanningStrategy);
 
     boolean registerDirectly(I identifier, D dependency);
 

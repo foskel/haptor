@@ -8,7 +8,7 @@ import com.github.foskel.haptor.scan.UnsatisfiedDependencyScanner;
 import java.util.function.Function;
 
 public interface DependencySystem<I, D> {
-    boolean register(Object source, UnsatisfiedDependencyScanner<I> scanner);
+    boolean register(Object source, UnsatisfiedDependencyScanner scanner);
 
     boolean unregister(Object source);
 

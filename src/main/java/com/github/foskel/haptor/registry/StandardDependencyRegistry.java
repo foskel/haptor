@@ -14,8 +14,9 @@ public final class StandardDependencyRegistry<I, D> implements DependencyRegistr
     private final Map<I, DependencyRef<I, D>> dependencies = new HashMap<>();
 
     @Override
-    public boolean register(Object source, UnsatisfiedDependencyScanner<I> scanningStrategy) {
-        Collection<I> unsatisfiedIds = scanningStrategy.scan(source);
+    public boolean register(Object source, UnsatisfiedDependencyScanner scanningStrategy) {
+        //noinspection unchecked
+        Collection<I> unsatisfiedIds = (Collection<I>) scanningStrategy.scan(source);
 
         if (unsatisfiedIds.isEmpty()) {
             return false;

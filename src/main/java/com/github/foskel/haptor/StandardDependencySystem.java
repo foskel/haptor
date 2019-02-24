@@ -22,7 +22,7 @@ public final class StandardDependencySystem<I, D> implements DependencySystem<I,
     }
 
     @Override
-    public boolean register(Object source, UnsatisfiedDependencyScanner<I> scanner) {
+    public boolean register(Object source, UnsatisfiedDependencyScanner scanner) {
         return this.registry.register(source, scanner);
     }
 
@@ -56,14 +56,21 @@ public final class StandardDependencySystem<I, D> implements DependencySystem<I,
         if (customLocator == null) {
             return null;
         }
-
+        
+        //noinspection unchecked
         return (T) customLocator.apply(args);
     }
 
     @Override
     public <T extends D> T find(I identifier) {
+        DependencyRef<I, D> ref = this.registry.getAllDependencies().get(identifier);
+
+        if (ref == null) {
+            return null;
+        }
+
         //noinspection unchecked
-        return (T) this.registry.getAllDependencies().get(identifier);
+        return (T) ref.getValue();
     }
 
     @Override
